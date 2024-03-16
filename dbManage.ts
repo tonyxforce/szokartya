@@ -87,10 +87,10 @@ export class DBClient {
 
         if (!ignoreTest) {
             var test = await this.getWord({ "meanings.orig.word": origWord, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
-            var test2 = await this.getWord({ "meanings.meaning.word": meaning, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
+            var test2 = await this.getWord({ "meanings.meaning.word": meaning, /* "meanings.orig.lang": lang, */ "meanings.meaning.lang": meaningLang });
 
             console.log("test1", { "meanings.orig.word": origWord, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
-            console.log("test2", { "meanings.meaning.word": meaning, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
+            console.log("test2", { /* "meanings.meaning.word": meaning,  *//* "meanings.orig.lang": lang, */ "meanings.meaning.lang": meaningLang });
 
             if (test.length != 0 || test.length != 0) {
                 console.log("found something like this already!");
