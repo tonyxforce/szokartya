@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
     <script src="js/tools.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         crossorigin="anonymous"></script>
@@ -28,7 +29,12 @@
             <input type="text" class="form-control" id="wordMeaning">
         </div>
         <div class="mb-3">
-            <span class="btn btn-primary form-control" id="add">Add</span>
+            <h5 for="addForce" class="form-label font-weight-bold text-danger text-center d-none" id="exists">Ez a szó már létezik!
+            </h5>
+        </div>
+        <div class="mb-3">
+            <span class="btn btn-primary form-control" id="add">Hozzáadás</span>
+            <span class="btn btn-danger form-control d-none" id="addForce">Hozzáadás Mégis</span>
         </div>
     </div>
     <script>
@@ -38,23 +44,65 @@
         var _wordOrig = document.getElementById("wordOrig");
         var _wordMeaning = document.getElementById("wordMeaning");
         var _add = document.getElementById("add");
+        var _addForce = document.getElementById("addForce");
+        var _exists = document.getElementById("exists")
 
-        _add.addEventListener("click", (ev) => {
-            if(!_wordOrig.value || !_wordMeaning.value){
+
+        function add(force){
+            _wordOrig.style.backgroundColor = "#00000000"
+            _wordMeaning.style.backgroundColor = "#00000000"
+            _exists.classList.add("d-none");
+            _addForce.classList.add("d-none")
+
+            if (!_wordOrig.value || !_wordMeaning.value) {
                 return alert("nincs megadva valamelyik mező!");
             }
-            console.log(httpJsonPost(`${requestUrl}/newWord`, {
+            var resp = httpJsonPost(`${requestUrl}/newWord`, {
                 newWord: _wordOrig.value,
                 lang: "hu",
                 meaning: _wordMeaning.value,
                 meaningLang: "fi",
-            }))
-        })
+                ignoreWarning: force
+            });
+
+            console.log(resp);
+
+            if (resp.error) {
+                if (resp.code) {
+                    if (resp.code == 409) {
+                        //alert("létező szó");
+                        _add.classList.add("d-none");
+                        _addForce.classList.remove("d-none")
+                        _exists.classList.remove("d-none")
+                        switch (resp.firstlast) {
+                            case 0:
+                                _wordOrig.style.backgroundColor = "#be202050"
+                                break;
+                            case 1:
+                                _wordMeaning.style.backgroundColor = "#be202050"
+                                break;
+                            case 2:
+                                _wordMeaning.style.backgroundColor = "#be202050"
+                                _wordOrig.style.backgroundColor = "#be202050";
+                                break;
+                        }
+                    }
+                } else {
+                    console.log("unknown err");
+                    alert("Ismeretlen hiba!");
+                }
+            }
+        }
+        _add.addEventListener("click", _=>add(false));
+        _addForce.addEventListener("click", _=>add(true));
 
         _wordOrig.onchange = () => {
-            console.log(_wordOrig.value)
-            var translation = httpGet(`${requestUrl}/translate?text=${_wordOrig.value}`);
-            _wordMeaning.value = translation
+            var translation = httpJsonGet(`${requestUrl}/translate?text=${_wordOrig.value}`);
+            if (translation.error) {
+                console.log(translation);
+                return
+            };
+            _wordMeaning.value = translation.text
         }
     </script>
     <style>

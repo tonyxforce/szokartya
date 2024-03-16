@@ -38,7 +38,10 @@ export class DBClient {
      * @memberof DBClient
      */
     public static async init(url: String) {
-        var async_result = await mongoose.connect(url);;
+        var async_result = await mongoose.connect(url);
+        if(async_result){
+            console.log("mongodb connection successful!");
+        }
         return new DBClient(async_result);
     }
 
@@ -74,7 +77,7 @@ export class DBClient {
      * @memberof DBClient
      */
     public async createNew({
-        newWord: origWord,
+        newWord,
         lang,
         meaning,
         meaningLang,
@@ -86,17 +89,22 @@ export class DBClient {
     }, ignoreTest: boolean = false) {
 
         if (!ignoreTest) {
-            var test = await this.getWord({ "meanings.orig.word": origWord, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
-            var test2 = await this.getWord({ "meanings.meaning.word": meaning, /* "meanings.orig.lang": lang, */ "meanings.meaning.lang": meaningLang });
+            var test = await this.getWord({ "meanings.orig.word": newWord, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
+            var test2 = await this.getWord({ "meanings.meaning.word": meaning, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
 
-            console.log("test1", { "meanings.orig.word": origWord, "meanings.orig.lang": lang, "meanings.meaning.lang": meaningLang });
-            console.log("test2", { /* "meanings.meaning.word": meaning,  *//* "meanings.orig.lang": lang, */ "meanings.meaning.lang": meaningLang });
-
-            if (test.length != 0 || test.length != 0) {
+            if(test.length != 0 || test2.length != 0){
                 console.log("found something like this already!");
                 console.log(test);
                 console.log(test2);
-                return { error: true, code: 409 };
+                var firstlast = 0;
+                if(test.length != 0 && test2.length != 0){
+                    firstlast = 2;
+                }else if(test.length != 0){
+                    firstlast = 0;
+                }else{
+                    firstlast = 1;
+                }
+                return {error: true, code: 409, firstlast};
             }
         }
 
@@ -104,7 +112,7 @@ export class DBClient {
             meanings: {
                 orig: {
                     lang: lang,
-                    word: origWord,
+                    word: newWord,
                 },
                 meaning: {
                     lang: meaningLang,
@@ -123,8 +131,19 @@ export class DBClient {
      * @return {*} 
      * @memberof DBClient
      */
-    public async getAll() {
+    public async getAll():Promise<Array<Object>> {
         return await this.getWord({});
+    }
+
+    
+    /**
+     *
+     *
+     * @return {Number} 
+     * @memberof DBClient
+     */
+    public async getCount(): Promise<number>{
+        return (await this.getAll()).length;
     }
 }
 

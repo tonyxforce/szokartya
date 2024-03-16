@@ -13,5 +13,5 @@ function httpJsonPost(url, body) {
     xhr.open("POST", url, false);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(body));
-    return xhr.responseText;
+    return JSON.parse(xhr.responseText);
 }
