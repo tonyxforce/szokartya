@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="js/tools.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <div class="main">
+        <div class="mb-3">
+            <label for="wordOrig" class="form-label">Eredeti szó:</label>
+            <input type="text" class="form-control" id="wordOrig">
+        </div>
+        <div class="mb-3">
+            <label for="wordOrig" class="form-label">Lefordítva:</label>
+            <input type="text" class="form-control" id="wordMeaning">
+        </div>
+        <div class="mb-3">
+            <span class="btn btn-primary form-control" id="add">Add</span>
+        </div>
+    </div>
+    <script>
+        var currentUrl = new URL(document.URL);
+        var requestUrl = `${currentUrl.origin}/api/v1`;
+
+        var _wordOrig = document.getElementById("wordOrig");
+        var _wordMeaning = document.getElementById("wordMeaning");
+        var _add = document.getElementById("add");
+
+        _add.addEventListener("click", (ev) => {
+            if(!_wordOrig.value || !_wordMeaning.value){
+                return alert("nincs megadva valamelyik mező!");
+            }
+            console.log(httpJsonPost(`${requestUrl}/newWord`, {
+                newWord: _wordOrig.value,
+                lang: "hu",
+                meaning: _wordMeaning.value,
+                meaningLang: "fi",
+            }))
+        })
+
+        _wordOrig.onchange = () => {
+            console.log(_wordOrig.value)
+            var translation = httpGet(`${requestUrl}/translate?text=${_wordOrig.value}`);
+            _wordMeaning.value = translation
+        }
+    </script>
+    <style>
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: yellow;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+    </style>
+</body>
+
+</html>
