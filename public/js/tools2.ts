@@ -1,35 +1,31 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCookie = exports.setCookie = exports.httpJsonPost = exports.httpJsonGet = exports.httpGet = void 0;
-function httpGet(theUrl, obj) {
+function httpGet(theUrl: string, obj?: object) {
     var xmlHttp = new XMLHttpRequest();
     var url = theUrl + (obj ? "?" + serialize(obj) : "");
     xmlHttp.open("GET", url, false); // false for synchronous request
     xmlHttp.send(null);
-    console.log(url, xmlHttp.responseText);
+    console.log(url, xmlHttp.responseText)
     return xmlHttp.responseText;
 }
-exports.httpGet = httpGet;
-function httpJsonGet(url, obj) {
+function httpJsonGet(url: string, obj?: object) {
     return JSON.parse(httpGet(url, obj));
 }
-exports.httpJsonGet = httpJsonGet;
-function httpJsonPost(url, body) {
+
+function httpJsonPost(url: string, body: object) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, false);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(body));
     return JSON.parse(xhr.responseText);
 }
-exports.httpJsonPost = httpJsonPost;
-function setCookie(cname, cvalue, exdays = 1000) {
+
+function setCookie(cname: string, cvalue: number, exdays = 1000) {
     const d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     let expires = "expires=" + d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-exports.setCookie = setCookie;
-function getCookie(cname) {
+
+function getCookie(cname: string) {
     let name = cname + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
     let ca = decodedCookie.split(';');
@@ -44,8 +40,8 @@ function getCookie(cname) {
     }
     return "";
 }
-exports.getCookie = getCookie;
-function serialize(obj) {
+
+function serialize(obj: object) {
     var str = [];
     for (var p in obj)
         if (obj.hasOwnProperty(p)) {

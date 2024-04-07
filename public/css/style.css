@@ -1,0 +1,18 @@
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    /* background: yellow; */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+input{
+    background-color:  #292f35 !important;
+}

@@ -15,8 +15,10 @@
         "types": ["node"],
         "module": "CommonJS",
         "target": "es2022",
-        "ignoreDeprecations": "5.0"
+        "ignoreDeprecations": "5.0",
+        "esModuleInterop": true,
+        "allowJs": true
     },
     "exclude": ["node_modules/*"],
-    "include": ["./*"],
+    "include": ["./*", "./public/js/*"]
 }

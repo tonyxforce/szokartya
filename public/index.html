@@ -5,41 +5,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=0, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/tools.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="bundled/main.js"></script>
+    <script>
+        $(function () {
+            $("#includedContent").load("partials/head.html");
+        });
+    </script>
+    <div id="includedContent"></div>
 </head>
 
 <body>
     <div class="main">
-        <div class="mb-3">
-            
+        <div class="input-group">
+            <label for="count" class="form-label" id="countLabel" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">Szavak száma:</label>
+        </div>
+        <div class="mb-4">
+            <input type="number" id="count" class="form-control" value="5" min="1">
+            <button class="btn btn-primary form-control" id="start">Indítás</span>
+        </div>
+        <form autocomplete="off">
+            <div class="mb-4" id="main"></div>
+        </form>
+        <div class="mb-4">
+            <span class="btn btn-warning form-control d-none" id="check">Ellenőrzés</span>
+        </div>
+        <div class="mb-4">
+            <span class="btn btn-secondary form-control" id="add">Szavak hozzáadása</span>
+        </div>
+        <div class="mb-4">
+            <span class="btn btn-warning form-control d-none" id="retry">Újrapróbálkozás(más szavak)</span>
         </div>
     </div>
-    <style>
-        html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            background: yellow;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-        }
-    </style>
 </body>
 
 </html>

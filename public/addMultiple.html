@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fájl feltöltése</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/tools2.js"></script>
+
+    <script>
+        $(function () {
+            $("#includedContent").load("partials/head.html");
+        });
+    </script>
+    <div id="includedContent"></div>
+</head>
+
+<body>
+    <!--     <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe> -->
+
+    <!--     <form method="post" enctype="multipart/form-data" action="/api/v1/upload" target="dummyframe"> -->
+    <div>
+        <div class="mb-3">
+            <div class="mb-1">
+                <label>Példa (klikk a képre a letöltéshez):</label>
+            </div>
+            <a href="/special/ex.xlsx" download="példa.xlsx"><img src="/img/ex.png" style="height: 10rem;"></a>
+        </div>
+        <div class="mb-3">
+            <input id="file" name="file" type="file" class="form-control" accept=".xlsx" />
+        </div>
+        <div class="mb-3">
+            <label class="form-check-label">
+                Létező szavak
+            </label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="existing" id="skip" value="skip" checked>
+                <label class="form-check-label text-success" for="skip">
+                    Kihagyása
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="existing" id="overwrite" value="overwrite">
+                <label class="form-check-label text-danger" for="overwrite">
+                    Felülírása
+                </label>
+            </div>
+
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary form-control" onclick="submit()">Feltöltés</button>
+        </div>
+        <div class="mb-3">
+            <span class="btn btn-danger form-control" id="back">Vissza</span>
+        </div>
+    </div>
+    <!--   </form> -->
+
+    <script>
+        var _back = document.querySelector("#back");
+        _back.onclick = () => {
+            location.replace("/add.html")
+        }
+        function submit() {
+
+            const _fileInput = document.getElementById("file");
+            const _existing = document.querySelector('input[name="existing"]:checked');
+
+            var form = new FormData();
+            form.append("file", _fileInput.files[0]);
+            form.append("existing", _existing.value);
+            //form.append("cold_run", "true");
+
+            var settings = {
+                "url": "/api/v1/upload",
+                "method": "POST",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+                "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+                var res = JSON.parse(response);
+                console.log(res);
+                if (res.error) {
+                    switch (res.code) {
+                        case 409:
+                            alert("file error");
+                            break;
+                        case 406:
+                            alert("missing options");
+                            break;
+                        case 407:
+                            alert("missing cells in uploaded file");
+                            break;
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

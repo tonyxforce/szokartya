@@ -1,7 +1,49 @@
-const mongoose = require("mongoose");
-const consts = require("../../const.js");
+import mongoose from "mongoose";
 
-module.exports = new mongoose.Schema({
+export interface WordIf{
+    meanings: {
+        orig: {
+            lang: string,
+            word: string,
+        },
+        meaning: {
+            lang: string,
+            word: string,
+        },
+    },
+    correctGuesses: number,
+    incorrectGuesses: number
+}
+
+
+export interface OptionalWordIf{
+    meanings?: {
+        orig?: {
+            lang?:      string,
+            word?:      string,
+        },
+        meaning?: {
+            lang?:      string,
+            word?:      string,
+        },
+    },
+    correctGuesses?:    number,
+    incorrectGuesses?:  number
+}
+
+export interface DbWordIf {
+    "meanings"?:                string,
+    "meanings.orig"?:           object,
+    "meanings.orig.lang"?:      string,
+    "meanings.orig.word"?:      string,
+    "meanings.meaning"?:        object,
+    "meanings.meaning.lang"?:   string,
+    "meanings.meaning.word"?:   string,
+    correctGuesses?: number,
+    incorrectGuesses?: number
+}
+
+var WordSchema = new mongoose.Schema<WordIf>({
     meanings: {
         orig: {
             lang: String,
@@ -11,5 +53,11 @@ module.exports = new mongoose.Schema({
             lang: String,
             word: String,
         },
-    }
+    },
+    correctGuesses: Number,
+    incorrectGuesses: Number
 });
+
+export default WordSchema;
+
+
